@@ -76,7 +76,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--prefixlist', required=True, help='Please supply a prefix list')
 
     args = parser.parse_args()
-    acl_lines = read_lines_from_acl(args.file)
+    acl_lines = read_lines_from_acl(args.filename)
     prefix_list = convert_acl_to_prefix_list(acl_lines, args.prefixlist)
     save_prefix_list_to_file(args.prefixlist, prefix_list)
 
