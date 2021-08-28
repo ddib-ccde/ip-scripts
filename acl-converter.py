@@ -1,28 +1,19 @@
 import ipaddress
-import sys
 
-def read_lines_from_acl() -> list:
+
+def read_lines_from_acl(filename) -> list:
     """Function to read the lines from an ACL, strip the ACL name
     and store the result in a list."""
-    # Check that both filename and prefix-list name has been supplied
-    if len(sys.argv) == 3:
-        # Get the filename
-        file_name = sys.argv[1]
-    else:
-        print("Incorrect syntax used. The correct syntax is acl-converter "
-             "filename prefix-list-name")
+
     # Open the file and store results in a list
-    with open(file_name, "r") as fh:
+    with open(filename, "r") as fh:
         acl_lines = fh.read().splitlines()
     # Remove the access-list name
     del acl_lines[0]
-    
+
     # changed to use list comprehension as example for daniel :)
-    return = [line.strip() for line in acl_lines]
-    
-def get_prefix_list_name() -> str:
-    pl_name = sys.argv[2]
-    return pl_name
+    return [line.strip() for line in acl_lines]
+
 
 def convert_acl_to_prefix_list(acl_list: list, pl_name: str) -> list:
     """Takes the list from function read_lines_from_acl
@@ -47,7 +38,7 @@ def convert_acl_to_prefix_list(acl_list: list, pl_name: str) -> list:
                 prefix_list_list.append(temp_string)
                 # Increase the counter
                 pl_seq += 5
-            # Check for remarks        
+            # Check for remarks
             elif "remark" in line:
                 # If remark, simply add the string unmodified to the prefix-list
                 prefix_list_list.append(line)
@@ -66,18 +57,28 @@ def convert_acl_to_prefix_list(acl_list: list, pl_name: str) -> list:
                 pl_seq += 5
     return prefix_list_list
 
+
 def save_prefix_list_to_file(pl_name: str, prefix_list: list) -> None:
     """Function to save the lines from the prefix-list list
     to a text file."""
     with open(pl_name, "w") as fh:
         for line in prefix_list:
-            fh.write(line +"\n")
-
-acl_lines = read_lines_from_acl()
-pl_name = get_prefix_list_name()
-prefix_list = convert_acl_to_prefix_list(acl_lines, pl_name)
-save_prefix_list_to_file(pl_name, prefix_list)
+            fh.write(line + "\n")
 
 
+if __name__ == '__main__':
+    import argparse
 
-    
+    parser = argparse.ArgumentParser(description='Script for Daniel')
+    parser.add_argument('-f', '--filename', required=True, help='Please supply a filename')
+    parser.add_argument('-p', '--prefixlist', required=True, help='Please supply a prefix list')
+
+    args = parser.parse_args()
+    acl_lines = read_lines_from_acl(args.file)
+    prefix_list = convert_acl_to_prefix_list(acl_lines, args.prefixlist)
+    save_prefix_list_to_file(args.prefixlist, prefix_list)
+
+
+
+
+
