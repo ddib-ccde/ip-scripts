@@ -16,13 +16,10 @@ def read_lines_from_acl() -> list:
         acl_lines = fh.read().splitlines()
     # Remove the access-list name
     del acl_lines[0]
-    # Remove any leading spaces in the list
-    acl_lines_cleaned = []
-    for line in acl_lines:
-        line = line.lstrip()
-        acl_lines_cleaned.append(line)
-    return acl_lines_cleaned
-
+    
+    # changed to use list comprehension as example for daniel :)
+    return = [line.strip() for line in acl_lines]
+    
 def get_prefix_list_name() -> str:
     pl_name = sys.argv[2]
     return pl_name
